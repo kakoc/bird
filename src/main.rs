@@ -129,6 +129,9 @@ struct BirdyArgs {
     /// save to clipboard instead of path
     #[arg(short, long)]
     clipboard: bool,
+    /// time to wait in seconds before screenshot
+    #[arg(short, long)]
+    time: Option<u64>,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -144,7 +147,12 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         screen,
         dir,
         clipboard,
+        time: after,
     } = BirdyArgs::parse();
+
+    if let Some(secs) = after {
+        std::thread::sleep(Duration::from_secs(secs));
+    }
 
     let clipboard = match (clipboard, &dir) {
         (true, Some(_)) => {
